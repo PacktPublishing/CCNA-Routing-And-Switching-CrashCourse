@@ -1,0 +1,216 @@
+Designed with Packet Tracer Version 7.2.1.0218
+
+Configured already on Devices 
+
+++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++
+	BASIC STARTUP COMMANDS
+++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++
+
+R1
+!
+enable 
+clock set 11:00:00 1 Jan 2019
+configure terminal
+!
+no ip domain-lookup
+service password-encryption 
+enable secret class
+hostname R1
+banner motd $Authorized Users Only$
+!
+line console 0 
+ password cisco
+ login 
+ exec-timeout 0 0
+ loggin synch
+!
+line vty 0 4
+ password cisco
+ login
+ exec-timeout 3 30
+ transport input telnet
+!
+interface s0/0/0
+ description r1-->r2
+ ip address 172.16.12.1 255.255.255.0
+ clock rate 64000
+ no shutdown 
+!
+!
+ip route 0.0.0.0 0.0.0.0 172.16.12.2
+!
+end
+copy running-config startup-config
+
+============================================
+
+
+R2
+!
+enable 
+clock set 11:00:00 1 Jan 2019
+configure terminal
+!
+no ip domain-lookup
+service password-encryption 
+enable secret class
+hostname R2
+banner motd $Authorized Users Only$
+!
+line console 0 
+ password cisco
+ login 
+ exec-timeout 0 0
+ loggin synch
+!
+line vty 0 4
+ password cisco
+ login
+ exec-timeout 3 30
+ transport input telnet
+!
+interface s0/0/0
+ description r2-->r1
+ ip address 172.16.12.2 255.255.255.0
+ clock rate 64000
+ no shutdown 
+!
+interface g0/1
+ description r2-->LAN
+ ip address 192.168.2.2 255.255.255.0
+ no shutdown 
+!
+ip route 0.0.0.0 0.0.0.0 172.16.12.1
+!
+end
+copy running-config startup-config
+
+============================================
+
+
+Sw1
+!
+enable 
+clock set 11:00:00 1 Jan 2019
+configure terminal
+!
+no ip domain-lookup
+service password-encryption 
+enable secret class
+hostname Sw1
+banner motd $Authorized Users Only$
+!
+line console 0 
+ password cisco
+ login 
+ exec-timeout 0 0
+ loggin synch
+!
+line vty 0 4
+ password cisco
+ login
+ exec-timeout 3 30
+!
+!
+interface vlan 1 
+ description Management Switch Virtual Port
+ ip address 10.1.1.50 255.255.255.0
+ no shutdown 
+!
+ip default-gateway 10.1.1.1 
+!
+interface range fa0/23 - 24
+ switchport mode trunk 
+!
+vlan 10
+ name Sales
+!
+vlan 20 
+ name Marketing
+!
+interface fa0/6
+ switchport mode access
+ switchport access vlan 10
+!
+interface fa0/18
+ switchport mode access
+ switchport access vlan 20
+!
+end
+copy running-config startup-config
+
+============================================
+
+
+Sw2
+!
+enable 
+clock set 11:00:00 1 Jan 2019
+configure terminal
+!
+no ip domain-lookup
+service password-encryption 
+enable secret class
+hostname Sw2
+banner motd $Authorized Users Only$
+!
+line console 0 
+ password cisco
+ login 
+ exec-timeout 0 0
+ loggin synch
+!
+line vty 0 4
+ password cisco
+ login
+ exec-timeout 3 30
+!
+interface vlan 1 
+ description Management Switch Virtual Port
+ ip address 10.1.1.100 255.255.255.0
+ no shutdown 
+!
+ip default-gateway 10.1.1.1 
+!
+interface range fa0/23 - 24
+ switchport mode trunk 
+!
+vlan 10
+ name Sales
+!
+vlan 20 
+ name Marketing
+!
+interface fa0/6
+ switchport mode access
+ switchport access vlan 10
+!
+interface fa0/18
+ switchport mode access
+ switchport access vlan 20
+!
+end
+copy running-config startup-config
+
+============================================
+
+
+Sw1 & Sw2
+
+============================================
+
+Sw2
+!
+show vlan brief
+!
+vlan 10
+ name Sales
+!
+vlan 20 
+ name Marketing
+!
+interface fa0/6
+ switchport mode access
+ switchport access vlan 10
